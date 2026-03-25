@@ -26,7 +26,6 @@ class View(object):
                    alignment=ft.MainAxisAlignment.START)
         )
 
-        # Add your stuff here
 
         # self.page.add([])
 
