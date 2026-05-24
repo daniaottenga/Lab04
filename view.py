@@ -1,14 +1,17 @@
 import flet as ft
 
 class View(object):
+
     def __init__(self, page: ft.Page):
         # Page
         self.page = page
         self.page.title = "TdP 2024 - Lab 04 - SpellChecker ++"
         self.page.horizontal_alignment = 'CENTER'
         self.page.theme_mode = ft.ThemeMode.LIGHT
+
         # Controller
         self.__controller = None
+
         # UI elements
         self.__title = None
         self.__theme_switch = None
@@ -19,22 +22,42 @@ class View(object):
         """Function that creates and adds the visual elements to the page. It also updates
         the page accordingly."""
         # title + theme switch
-        self.__title = ft.Text("TdP 2024 - Lab 04 - SpellChecker ++", size=24, color="blue")
-        self.__theme_switch = ft.Switch(label="Light theme", on_change=self.theme_changed)
+        self.__title = ft.Text("TdP 2024 - Lab 04 - SpellChecker ++", size=24, color="blue") # titolo che compare sulla pagina
+        self.__theme_switch = ft.Switch(label="Light theme", on_change=self.theme_changed) # bottone per cambiare tema della pagina
         self.page.controls.append(
-            ft.Row(spacing=30, controls=[self.__theme_switch, self.__title, ],
+            ft.Row(spacing=30, controls=[self.__theme_switch, self.__title],
                    alignment=ft.MainAxisAlignment.START)
         )
+        self._lingua = ft.Dropdown(options=[ft.dropdown.Option("Italian"),
+                                            ft.dropdown.Option("English"),
+                                            ft.dropdown.Option("Spanish")],
+                                   label="Lingua")
+        self._modalita = ft.Dropdown(options=[ft.dropdown.Option("Default"),
+                                              ft.dropdown.Option("Lineare"),
+                                              ft.dropdown.Option("Dicotomica")],
+                                     label="Modalità")
+        self._txtIn = ft.TextField(label="Inserimento testo: ")
+        self._btn = ft.ElevatedButton("Avviare la funzione di correzione ortografica",
+                                      on_click=self.__controller.handleSentence)
+        self._lv = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
 
+        #count = 1
+        #for i in range(0, 60):
+        #    self._lv.controls.append(ft.Text(f"Line{count}"))
+        #    count += 1
 
-        # self.page.add([])
+        self._row1 = ft.Row(controls=[self._lingua])
+        self._row2 = ft.Row(controls=[self._modalita, self._txtIn, self._btn])
 
-        self.page.update()
+        self.page.add(self._row1, self._row2, self._lv)
+        self.update()
 
     def update(self):
         self.page.update()
+
     def setController(self, controller):
         self.__controller = controller
+
     def theme_changed(self, e):
         """Function that changes the color theme of the app, when the corresponding
         switch is triggered"""
@@ -43,10 +66,12 @@ class View(object):
             if self.page.theme_mode == ft.ThemeMode.LIGHT
             else ft.ThemeMode.LIGHT
         )
+
         self.__theme_switch.label = (
             "Light theme" if self.page.theme_mode == ft.ThemeMode.LIGHT else "Dark theme"
         )
+
         # self.__txt_container.bgcolor = (
         #     ft.colors.GREY_900 if self.page.theme_mode == ft.ThemeMode.DARK else ft.colors.GREY_300
         # )
-        self.page.update()
+        self.update()
